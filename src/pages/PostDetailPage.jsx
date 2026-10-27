@@ -19,7 +19,7 @@ function PostDetailPage() {
     const loadPost = async () => {
       // 조회수를 먼저 올린 뒤 글을 읽어 온다.
       await supabase.rpc('increment_view_count', { p_post_id: id });
-      const { data, error } = await supabase.from('posts').select('*, users(name)').eq('id', id).single();
+      const { data, error } = await supabase.from('posts').select('*, users!posts_user_id_fkey(name)').eq('id', id).single();
       if (error) setErrorMessage('글을 찾을 수 없어요.');
       else setPost(data);
     };

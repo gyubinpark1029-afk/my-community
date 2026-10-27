@@ -21,7 +21,7 @@ function PostListPage() {
     setIsLoading(true);
     let query = supabase
       .from('posts')
-      .select('id, title, keywords, rating, view_count, created_at, users(name), comments(count), likes(count)')
+      .select('id, title, keywords, rating, view_count, created_at, users!posts_user_id_fkey(name), comments(count), likes(count)')
       .order('id', { ascending: false })
       .limit(100);
     if (keyword) query = query.contains('keywords', [keyword]);
