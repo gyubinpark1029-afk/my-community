@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import { Alert, Box, Button, Chip, Paper, Rating, Stack, Typography } from '@mui/material';
 import CreateIcon from '@mui/icons-material/Create';
@@ -8,6 +8,7 @@ import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import supabase from '../supabaseClient.js';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import formatDate from '../utils/formatDate.js';
+import HeroSection from '../components/HeroSection.jsx';
 
 function PostListPage() {
   const { session } = useAuth();
@@ -16,6 +17,7 @@ function PostListPage() {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
+  const listRef = useRef(null);
 
   useEffect(() => {
     setIsLoading(true);
@@ -32,9 +34,14 @@ function PostListPage() {
     });
   }, [keyword]);
 
+  const handleBrowse = () => {
+    listRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <Stack spacing={2}>
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
+      {!keyword && <HeroSection onBrowse={handleBrowse} />}
+      <Stack ref={listRef} direction="row" justifyContent="space-between" alignItems="center" sx={{ pt: 2 }}>
         <Typography variant="h1">책 이야기 서랍 📖</Typography>
         <Button
           variant="contained"
