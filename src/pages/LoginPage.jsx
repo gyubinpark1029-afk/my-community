@@ -33,6 +33,14 @@ function LoginPage() {
         <Button type="submit" variant="contained" disabled={isLoading}>
           로그인
         </Button>
+        <Stack direction="row" spacing={2} justifyContent="center">
+          <Link component={RouterLink} to="/find-id" variant="body2">
+            아이디 찾기
+          </Link>
+          <Link component={RouterLink} to="/find-password" variant="body2">
+            비밀번호 찾기
+          </Link>
+        </Stack>
         <Typography variant="body2" color="text.secondary">
           아직 회원이 아니신가요?{' '}
           <Link component={RouterLink} to="/signup">
