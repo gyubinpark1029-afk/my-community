@@ -11,6 +11,8 @@ import formatDate from '../utils/formatDate.js';
 import HeroSection from '../components/HeroSection.jsx';
 import { GENRES } from '../constants/genres.js';
 
+const PAGE_SIZE = 10;
+
 function PostListPage() {
   const { session } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -18,25 +20,37 @@ function PostListPage() {
   const genre = searchParams.get('genre');
   const sort = searchParams.get('sort') === 'likes' ? 'likes' : 'latest';
   const [posts, setPosts] = useState([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
   const listRef = useRef(null);
+
+  // 필터나 정렬이 바뀌면 보여줄 개수를 처음(PAGE_SIZE)으로 되돌린다.
+  const filterKey = `${keyword}|${genre}|${sort}`;
+  const [limit, setLimit] = useState({ key: filterKey, count: PAGE_SIZE });
+  const visibleCount = limit.key === filterKey ? limit.count : PAGE_SIZE;
 
   useEffect(() => {
     setIsLoading(true);
     let query = supabase
       .from('posts')
-      .select('id, title, book_title, book_author, genre, keywords, rating, view_count, created_at, users!posts_user_id_fkey(name), comments(count), likes(count)')
-      .order('id', { ascending: false })
-      .limit(100);
+      .select(
+        'id, title, book_title, book_author, genre, keywords, rating, view_count, like_count, created_at, users!posts_user_id_fkey(name), comments(count)',
+        { count: 'exact' },
+      );
     if (keyword) query = query.contains('keywords', [keyword]);
     if (genre) query = query.eq('genre', genre);
-    query.then(({ data, error }) => {
+    if (sort === 'likes') query = query.order('like_count', { ascending: false });
+    query = query.order('id', { ascending: false }).range(0, visibleCount - 1);
+    query.then(({ data, count, error }) => {
       if (error) setErrorMessage('글 목록을 불러오지 못했어요.');
-      else setPosts(data);
+      else {
+        setPosts(data);
+        setTotalCount(count);
+      }
       setIsLoading(false);
     });
-  }, [keyword, genre]);
+  }, [keyword, genre, sort, visibleCount]);
 
   const handleBrowse = () => {
     listRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -54,11 +68,7 @@ function PostListPage() {
 
   const handleClearKeyword = () => updateParam('keyword', null);
 
-  // 이미 불러온 글(최대 100개) 안에서 좋아요 많은 순으로 다시 늘어놓는다.
-  const sortedPosts =
-    sort === 'likes'
-      ? [...posts].sort((a, b) => b.likes[0].count - a.likes[0].count || b.id - a.id)
-      : posts;
+  const handleLoadMore = () => setLimit({ key: filterKey, count: visibleCount + PAGE_SIZE });
 
   const handleChangeSort = (_event, nextSort) => {
     // 이미 선택된 버튼을 다시 누르면 null이 오므로 무시한다.
@@ -107,7 +117,7 @@ function PostListPage() {
       {!isLoading && posts.length === 0 && !errorMessage && (
         <Typography color="text.secondary">아직 글이 없어요. 첫 글을 남겨 보세요!</Typography>
       )}
-      {sortedPosts.map((post) => (
+      {posts.map((post) => (
         <Paper
           key={post.id}
           component={RouterLink}
@@ -143,7 +153,7 @@ function PostListPage() {
               </Stack>
               <Stack direction="row" spacing={0.5} alignItems="center">
                 <FavoriteIcon fontSize="small" />
-                <Typography variant="body2">{post.likes[0].count}</Typography>
+                <Typography variant="body2">{post.like_count}</Typography>
               </Stack>
               <Stack direction="row" spacing={0.5} alignItems="center">
                 <ChatBubbleIcon fontSize="small" />
@@ -153,6 +163,11 @@ function PostListPage() {
           </Stack>
         </Paper>
       ))}
+      {posts.length < totalCount && (
+        <Button variant="outlined" onClick={handleLoadMore} disabled={isLoading} sx={{ alignSelf: 'center' }}>
+          더 보기 ({posts.length}/{totalCount})
+        </Button>
+      )}
     </Stack>
   );
 }
