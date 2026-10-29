@@ -26,15 +26,7 @@ function Header() {
         <Box
           component={RouterLink}
           to="/"
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 1,
-            color: 'inherit',
-            textDecoration: 'none',
-            flexGrow: 1,
-          }}
+          sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'inherit', textDecoration: 'none', flexGrow: 1 }}
         >
           <MenuBookIcon />
           <Typography variant="h6" component="span">
