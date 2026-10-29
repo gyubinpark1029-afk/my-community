@@ -1,8 +1,8 @@
 import { Link as RouterLink } from 'react-router-dom';
 import { Box, Button, Stack, Typography } from '@mui/material';
-import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import CreateIcon from '@mui/icons-material/Create';
 import { useAuth } from '../contexts/AuthContext.jsx';
+import DrawerLogo from './DrawerLogo.jsx';
 
 function HeroSection({ onBrowse }) {
   const { session } = useAuth();
@@ -29,14 +29,14 @@ function HeroSection({ onBrowse }) {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            width: 80,
-            height: 80,
+            width: 96,
+            height: 96,
             borderRadius: '50%',
             bgcolor: 'background.paper',
             boxShadow: 2,
           }}
         >
-          <AutoStoriesIcon sx={{ fontSize: 40, color: 'text.primary' }} />
+          <DrawerLogo size={64} />
         </Box>
         <Stack spacing={1} sx={{ alignItems: 'center' }}>
           <Typography
