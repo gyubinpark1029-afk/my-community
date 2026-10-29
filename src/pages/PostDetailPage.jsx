@@ -44,7 +44,7 @@ function PostDetailPage() {
             {post.users?.name} · 작성 {formatDate(post.created_at)} · 조회 {post.view_count} · 댓글 {commentCount}
           </Typography>
           {post.book_title && (
-            <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" useFlexGap>
+            <Stack direction="row" spacing={1} useFlexGap sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
               <Typography variant="subtitle1">
                 📖 {post.book_title}
                 {post.book_author && ` · ${post.book_author}`}
@@ -62,7 +62,7 @@ function PostDetailPage() {
             </Stack>
           )}
           {post.rating && <Rating value={post.rating} readOnly />}
-          <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+          <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap' }}>
             {post.keywords.map((word) => (
               <Chip
                 key={word}

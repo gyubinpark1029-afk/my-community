@@ -23,7 +23,7 @@ function HeroSection({ onBrowse }) {
           `radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.55) 0%, transparent 45%), linear-gradient(135deg, ${theme.vars.palette.primary.main} 0%, ${theme.vars.palette.warning.main} 35%, ${theme.vars.palette.secondary.main} 70%, ${theme.vars.palette.success.main} 100%)`,
       }}
     >
-      <Stack spacing={3} alignItems="center">
+      <Stack spacing={3} sx={{ alignItems: 'center' }}>
         <Box
           sx={{
             display: 'flex',
@@ -38,7 +38,7 @@ function HeroSection({ onBrowse }) {
         >
           <AutoStoriesIcon sx={{ fontSize: 40, color: 'text.primary' }} />
         </Box>
-        <Stack spacing={1} alignItems="center">
+        <Stack spacing={1} sx={{ alignItems: 'center' }}>
           <Typography
             variant="h1"
             sx={{ fontSize: { xs: '2.125rem', md: '3rem' }, letterSpacing: 4 }}

@@ -33,7 +33,7 @@ function LoginPage() {
         <Button type="submit" variant="contained" disabled={isLoading}>
           로그인
         </Button>
-        <Stack direction="row" spacing={2} justifyContent="center">
+        <Stack direction="row" spacing={2} sx={{ justifyContent: 'center' }}>
           <Link component={RouterLink} to="/find-id" variant="body2">
             아이디 찾기
           </Link>

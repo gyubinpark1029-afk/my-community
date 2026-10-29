@@ -16,7 +16,7 @@ function PostSummaryItem({ post }) {
             📖 {post.book_title}
           </Typography>
         )}
-        <Stack direction="row" spacing={1} alignItems="center">
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
           {post.genre && <Chip label={post.genre} size="small" color="secondary" />}
           <Typography variant="body2" color="text.secondary">
             {formatDate(post.created_at)}

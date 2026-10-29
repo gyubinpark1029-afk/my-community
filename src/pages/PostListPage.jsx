@@ -78,7 +78,7 @@ function PostListPage() {
   return (
     <Stack spacing={2}>
       {!keyword && !genre && <HeroSection onBrowse={handleBrowse} />}
-      <Stack ref={listRef} direction="row" justifyContent="space-between" alignItems="center" sx={{ pt: 2 }}>
+      <Stack ref={listRef} direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', pt: 2 }}>
         <Typography variant="h1">책 이야기 서랍 📖</Typography>
         <Button
           variant="contained"
@@ -89,7 +89,7 @@ function PostListPage() {
           글쓰기
         </Button>
       </Stack>
-      <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+      <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap' }}>
         <Chip
           label="전체"
           color="primary"
@@ -106,7 +106,7 @@ function PostListPage() {
           />
         ))}
       </Stack>
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
+      <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
         <Box>{keyword && <Chip label={`#${keyword}`} color="warning" onDelete={handleClearKeyword} />}</Box>
         <ToggleButtonGroup size="small" exclusive value={sort} onChange={handleChangeSort}>
           <ToggleButton value="latest">최신순</ToggleButton>
@@ -125,7 +125,7 @@ function PostListPage() {
           sx={{ p: 2, textDecoration: 'none', color: 'inherit', display: 'block' }}
         >
           <Stack spacing={1}>
-            <Stack direction="row" spacing={1} alignItems="center">
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
               <Typography variant="body2" color="text.secondary">
                 No.{post.id}
               </Typography>
@@ -137,25 +137,25 @@ function PostListPage() {
                 {post.book_author && ` · ${post.book_author}`}
               </Typography>
             )}
-            <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" useFlexGap>
+            <Stack direction="row" spacing={1} useFlexGap sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
               {post.genre && <Chip label={post.genre} size="small" color="secondary" />}
               {post.rating && <Rating value={post.rating} readOnly size="small" />}
               {post.keywords.map((word) => (
                 <Chip key={word} label={`#${word}`} size="small" color="success" />
               ))}
             </Stack>
-            <Stack direction="row" spacing={2} alignItems="center" color="text.secondary">
+            <Stack direction="row" spacing={2} sx={{ alignItems: 'center', color: 'text.secondary' }}>
               <Typography variant="body2">{post.users?.name}</Typography>
               <Typography variant="body2">{formatDate(post.created_at)}</Typography>
-              <Stack direction="row" spacing={0.5} alignItems="center">
+              <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center' }}>
                 <VisibilityIcon fontSize="small" />
                 <Typography variant="body2">{post.view_count}</Typography>
               </Stack>
-              <Stack direction="row" spacing={0.5} alignItems="center">
+              <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center' }}>
                 <FavoriteIcon fontSize="small" />
                 <Typography variant="body2">{post.like_count}</Typography>
               </Stack>
-              <Stack direction="row" spacing={0.5} alignItems="center">
+              <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center' }}>
                 <ChatBubbleIcon fontSize="small" />
                 <Typography variant="body2">{post.comments[0].count}</Typography>
               </Stack>

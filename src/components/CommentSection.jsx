@@ -47,7 +47,7 @@ function CommentSection({ postId, onCountChange }) {
       <Typography variant="h6">댓글 {comments.length}</Typography>
       {comments.map((comment) => (
         <Paper key={comment.id} sx={{ p: 2 }}>
-          <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
+          <Stack direction="row" sx={{ alignItems: 'flex-start', justifyContent: 'space-between' }}>
             <Box>
               <Typography variant="body2" color="text.secondary">
                 {comment.users?.name} · {formatDate(comment.created_at)}
