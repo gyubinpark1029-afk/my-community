@@ -78,17 +78,31 @@ function PostListPage() {
   return (
     <Stack spacing={2}>
       {!keyword && !genre && <HeroSection onBrowse={handleBrowse} />}
-      <Stack ref={listRef} direction="row" justifyContent="space-between" alignItems="center" sx={{ pt: 2 }}>
-        <Typography variant="h1">책 이야기 서랍 📖</Typography>
+      {/* 가운데 칸에 제목을 두고, 양옆 칸을 같은 크기로 비워 제목이 정확히 중앙에 오게 한다. */}
+      <Box
+        ref={listRef}
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', sm: '1fr auto 1fr' },
+          gap: 2,
+          alignItems: 'center',
+          pt: 2,
+        }}
+      >
+        <Box sx={{ display: { xs: 'none', sm: 'block' } }} />
+        <Typography variant="h1" textAlign="center">
+          책 이야기 서랍 📖
+        </Typography>
         <Button
           variant="contained"
           startIcon={<CreateIcon />}
           component={RouterLink}
           to={session ? '/posts/new' : '/login'}
+          sx={{ justifySelf: { xs: 'center', sm: 'end' } }}
         >
           글쓰기
         </Button>
-      </Stack>
+      </Box>
       <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
         <Chip
           label="전체"
