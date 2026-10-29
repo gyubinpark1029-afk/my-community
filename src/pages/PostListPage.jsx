@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link as RouterLink, useSearchParams } from 'react-router-dom';
-import { Alert, Box, Button, Chip, Paper, Rating, Stack, Typography } from '@mui/material';
+import { Alert, Box, Button, Chip, Paper, Rating, Stack, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import CreateIcon from '@mui/icons-material/Create';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -16,6 +16,7 @@ function PostListPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const keyword = searchParams.get('keyword');
   const genre = searchParams.get('genre');
+  const sort = searchParams.get('sort') === 'likes' ? 'likes' : 'latest';
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
@@ -41,17 +42,27 @@ function PostListPage() {
     listRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const handleSelectGenre = (selectedGenre) => {
+  // 다른 필터는 그대로 두고 주소의 값 하나만 바꾼다. value가 비어 있으면 지운다.
+  const updateParam = (name, value) => {
     const nextParams = new URLSearchParams(searchParams);
-    if (selectedGenre) nextParams.set('genre', selectedGenre);
-    else nextParams.delete('genre');
+    if (value) nextParams.set(name, value);
+    else nextParams.delete(name);
     setSearchParams(nextParams);
   };
 
-  const handleClearKeyword = () => {
-    const nextParams = new URLSearchParams(searchParams);
-    nextParams.delete('keyword');
-    setSearchParams(nextParams);
+  const handleSelectGenre = (selectedGenre) => updateParam('genre', selectedGenre);
+
+  const handleClearKeyword = () => updateParam('keyword', null);
+
+  // 이미 불러온 글(최대 100개) 안에서 좋아요 많은 순으로 다시 늘어놓는다.
+  const sortedPosts =
+    sort === 'likes'
+      ? [...posts].sort((a, b) => b.likes[0].count - a.likes[0].count || b.id - a.id)
+      : posts;
+
+  const handleChangeSort = (_event, nextSort) => {
+    // 이미 선택된 버튼을 다시 누르면 null이 오므로 무시한다.
+    if (nextSort) updateParam('sort', nextSort === 'likes' ? 'likes' : null);
   };
 
   return (
@@ -85,16 +96,18 @@ function PostListPage() {
           />
         ))}
       </Stack>
-      {keyword && (
-        <Box>
-          <Chip label={`#${keyword}`} color="warning" onDelete={handleClearKeyword} />
-        </Box>
-      )}
+      <Stack direction="row" justifyContent="space-between" alignItems="center">
+        <Box>{keyword && <Chip label={`#${keyword}`} color="warning" onDelete={handleClearKeyword} />}</Box>
+        <ToggleButtonGroup size="small" exclusive value={sort} onChange={handleChangeSort}>
+          <ToggleButton value="latest">최신순</ToggleButton>
+          <ToggleButton value="likes">좋아요순</ToggleButton>
+        </ToggleButtonGroup>
+      </Stack>
       {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
       {!isLoading && posts.length === 0 && !errorMessage && (
         <Typography color="text.secondary">아직 글이 없어요. 첫 글을 남겨 보세요!</Typography>
       )}
-      {posts.map((post) => (
+      {sortedPosts.map((post) => (
         <Paper
           key={post.id}
           component={RouterLink}
