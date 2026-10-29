@@ -9,11 +9,13 @@ import supabase from '../supabaseClient.js';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import formatDate from '../utils/formatDate.js';
 import HeroSection from '../components/HeroSection.jsx';
+import { GENRES } from '../constants/genres.js';
 
 function PostListPage() {
   const { session } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const keyword = searchParams.get('keyword');
+  const genre = searchParams.get('genre');
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
@@ -23,24 +25,38 @@ function PostListPage() {
     setIsLoading(true);
     let query = supabase
       .from('posts')
-      .select('id, title, keywords, rating, view_count, created_at, users!posts_user_id_fkey(name), comments(count), likes(count)')
+      .select('id, title, book_title, book_author, genre, keywords, rating, view_count, created_at, users!posts_user_id_fkey(name), comments(count), likes(count)')
       .order('id', { ascending: false })
       .limit(100);
     if (keyword) query = query.contains('keywords', [keyword]);
+    if (genre) query = query.eq('genre', genre);
     query.then(({ data, error }) => {
       if (error) setErrorMessage('글 목록을 불러오지 못했어요.');
       else setPosts(data);
       setIsLoading(false);
     });
-  }, [keyword]);
+  }, [keyword, genre]);
 
   const handleBrowse = () => {
     listRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const handleSelectGenre = (selectedGenre) => {
+    const nextParams = new URLSearchParams(searchParams);
+    if (selectedGenre) nextParams.set('genre', selectedGenre);
+    else nextParams.delete('genre');
+    setSearchParams(nextParams);
+  };
+
+  const handleClearKeyword = () => {
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.delete('keyword');
+    setSearchParams(nextParams);
+  };
+
   return (
     <Stack spacing={2}>
-      {!keyword && <HeroSection onBrowse={handleBrowse} />}
+      {!keyword && !genre && <HeroSection onBrowse={handleBrowse} />}
       <Stack ref={listRef} direction="row" justifyContent="space-between" alignItems="center" sx={{ pt: 2 }}>
         <Typography variant="h1">책 이야기 서랍 📖</Typography>
         <Button
@@ -52,9 +68,26 @@ function PostListPage() {
           글쓰기
         </Button>
       </Stack>
+      <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+        <Chip
+          label="전체"
+          color="primary"
+          variant={genre ? 'outlined' : 'filled'}
+          onClick={() => handleSelectGenre(null)}
+        />
+        {GENRES.map((item) => (
+          <Chip
+            key={item}
+            label={item}
+            color="primary"
+            variant={genre === item ? 'filled' : 'outlined'}
+            onClick={() => handleSelectGenre(item)}
+          />
+        ))}
+      </Stack>
       {keyword && (
         <Box>
-          <Chip label={`#${keyword}`} color="warning" onDelete={() => setSearchParams({})} />
+          <Chip label={`#${keyword}`} color="warning" onDelete={handleClearKeyword} />
         </Box>
       )}
       {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
@@ -75,7 +108,14 @@ function PostListPage() {
               </Typography>
               <Typography variant="h6">{post.title}</Typography>
             </Stack>
+            {post.book_title && (
+              <Typography variant="body2" color="text.secondary">
+                📖 {post.book_title}
+                {post.book_author && ` · ${post.book_author}`}
+              </Typography>
+            )}
             <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" useFlexGap>
+              {post.genre && <Chip label={post.genre} size="small" color="secondary" />}
               {post.rating && <Rating value={post.rating} readOnly size="small" />}
               {post.keywords.map((word) => (
                 <Chip key={word} label={`#${word}`} size="small" color="success" />

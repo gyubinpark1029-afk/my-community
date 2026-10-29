@@ -1,15 +1,25 @@
 import { useEffect, useState } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
-import { Alert, Box, Button, Paper, Rating, Stack, TextField, Typography } from '@mui/material';
+import { Alert, Box, Button, MenuItem, Paper, Rating, Stack, TextField, Typography } from '@mui/material';
 import supabase from '../supabaseClient.js';
 import { useAuth } from '../contexts/AuthContext.jsx';
+import { GENRES } from '../constants/genres.js';
 
 function PostWritePage() {
   const { id } = useParams();
   const isEdit = Boolean(id);
   const navigate = useNavigate();
   const { session, profile, isLoading } = useAuth();
-  const [form, setForm] = useState({ title: '', content: '', keywords: '', rating: null, imageUrl: null });
+  const [form, setForm] = useState({
+    title: '',
+    bookTitle: '',
+    bookAuthor: '',
+    genre: '',
+    content: '',
+    keywords: '',
+    rating: null,
+    imageUrl: null,
+  });
   const [imageFile, setImageFile] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [isSaving, setIsSaving] = useState(false);
@@ -25,6 +35,9 @@ function PostWritePage() {
         if (!data) return;
         setForm({
           title: data.title,
+          bookTitle: data.book_title ?? '',
+          bookAuthor: data.book_author ?? '',
+          genre: data.genre ?? '',
           content: data.content,
           keywords: data.keywords.join(', '),
           rating: data.rating,
@@ -49,6 +62,9 @@ function PostWritePage() {
       const imageUrl = imageFile ? await uploadImage() : form.imageUrl;
       const values = {
         title: form.title.trim(),
+        book_title: form.bookTitle.trim(),
+        book_author: form.bookAuthor.trim() || null,
+        genre: form.genre,
         content: form.content.trim(),
         keywords: form.keywords.split(',').map((word) => word.trim().replace(/^#/, '')).filter(Boolean),
         rating: form.rating,
@@ -74,6 +90,30 @@ function PostWritePage() {
         <Typography variant="h5">{isEdit ? '글 수정' : '새 글 쓰기'}</Typography>
         {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
         <TextField label="제목" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
+        <TextField
+          label="책 제목"
+          value={form.bookTitle}
+          onChange={(e) => setForm({ ...form, bookTitle: e.target.value })}
+          required
+        />
+        <TextField
+          label="저자"
+          value={form.bookAuthor}
+          onChange={(e) => setForm({ ...form, bookAuthor: e.target.value })}
+        />
+        <TextField
+          select
+          label="장르"
+          value={form.genre}
+          onChange={(e) => setForm({ ...form, genre: e.target.value })}
+          required
+        >
+          {GENRES.map((genre) => (
+            <MenuItem key={genre} value={genre}>
+              {genre}
+            </MenuItem>
+          ))}
+        </TextField>
         <TextField
           label="내용"
           value={form.content}

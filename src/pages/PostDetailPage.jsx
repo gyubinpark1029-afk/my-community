@@ -43,6 +43,24 @@ function PostDetailPage() {
           <Typography variant="body2" color="text.secondary">
             {post.users?.name} · 작성 {formatDate(post.created_at)} · 조회 {post.view_count} · 댓글 {commentCount}
           </Typography>
+          {post.book_title && (
+            <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" useFlexGap>
+              <Typography variant="subtitle1">
+                📖 {post.book_title}
+                {post.book_author && ` · ${post.book_author}`}
+              </Typography>
+              {post.genre && (
+                <Chip
+                  label={post.genre}
+                  size="small"
+                  color="secondary"
+                  component={RouterLink}
+                  to={`/?genre=${encodeURIComponent(post.genre)}`}
+                  clickable
+                />
+              )}
+            </Stack>
+          )}
           {post.rating && <Rating value={post.rating} readOnly />}
           <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
             {post.keywords.map((word) => (
