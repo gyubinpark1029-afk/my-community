@@ -28,7 +28,7 @@ function Header() {
           to="/"
           sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'inherit', textDecoration: 'none', flexGrow: 1 }}
         >
-          <DrawerLogo size={36} isAnimated={false} />
+          <DrawerLogo size={36} />
           <Typography variant="h6" component="span">
             서랍장
           </Typography>
