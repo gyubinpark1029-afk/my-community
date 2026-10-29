@@ -13,10 +13,14 @@ function HeroSection({ onBrowse }) {
         p: { xs: 4, md: 6 },
         borderRadius: 4,
         textAlign: 'center',
-        boxShadow: (theme) => `0 16px 40px ${theme.palette.primary.main}66`,
+        // 배경이 항상 파스텔이라 글자는 모드와 상관없이 어두운 잉크색(contrastText)을 쓴다
+        color: 'primary.contrastText',
+        // 모드에 따라 바뀌는 색은 theme.vars로 가져와야 다크 모드에서도 따라 바뀐다
+        boxShadow: (theme) =>
+          `0 16px 40px color-mix(in srgb, ${theme.vars.palette.primary.main} 40%, transparent)`,
         // 분홍 → 노랑 → 하늘 → 민트로 번지는 몽환적인 배경 위에 흰 빛 번짐을 겹친다
         background: (theme) =>
-          `radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.55) 0%, transparent 45%), linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.warning.main} 35%, ${theme.palette.secondary.main} 70%, ${theme.palette.success.main} 100%)`,
+          `radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.55) 0%, transparent 45%), linear-gradient(135deg, ${theme.vars.palette.primary.main} 0%, ${theme.vars.palette.warning.main} 35%, ${theme.vars.palette.secondary.main} 70%, ${theme.vars.palette.success.main} 100%)`,
       }}
     >
       <Stack spacing={3} alignItems="center">
@@ -43,7 +47,7 @@ function HeroSection({ onBrowse }) {
           </Typography>
           <Typography
             variant="h6"
-            sx={{ fontWeight: 400, lineHeight: 1.8, maxWidth: 480, color: 'text.primary' }}
+            sx={{ fontWeight: 400, lineHeight: 1.8, maxWidth: 480 }}
           >
             마음에 담아 둔 책 이야기를
             <br />
@@ -58,7 +62,11 @@ function HeroSection({ onBrowse }) {
             startIcon={<CreateIcon />}
             component={RouterLink}
             to={session ? '/posts/new' : '/signup'}
-            sx={{ bgcolor: 'background.paper', '&:hover': { bgcolor: 'background.default' } }}
+            sx={{
+              bgcolor: 'background.paper',
+              color: 'text.primary',
+              '&:hover': { bgcolor: 'background.default' },
+            }}
           >
             {session ? '글쓰기' : '함께 시작하기'}
           </Button>
@@ -68,9 +76,9 @@ function HeroSection({ onBrowse }) {
             size="large"
             onClick={onBrowse}
             sx={{
-              color: 'text.primary',
-              borderColor: 'text.primary',
-              '&:hover': { borderColor: 'text.primary', bgcolor: 'rgba(255, 255, 255, 0.4)' },
+              color: 'primary.contrastText',
+              borderColor: 'primary.contrastText',
+              '&:hover': { borderColor: 'primary.contrastText', bgcolor: 'rgba(255, 255, 255, 0.4)' },
             }}
           >
             글 둘러보기
