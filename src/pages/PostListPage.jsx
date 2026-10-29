@@ -79,12 +79,15 @@ function PostListPage() {
     <Stack spacing={2}>
       {!keyword && !genre && <HeroSection onBrowse={handleBrowse} />}
       <Stack ref={listRef} direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', pt: 2 }}>
-        <Typography variant="h1">책 이야기 서랍 📖</Typography>
+        <Typography variant="h1" sx={{ fontSize: { xs: '1.75rem', sm: '2.125rem' } }}>
+          책 이야기 서랍 📖
+        </Typography>
         <Button
           variant="contained"
           startIcon={<CreateIcon />}
           component={RouterLink}
           to={session ? '/posts/new' : '/login'}
+          sx={{ flexShrink: 0, whiteSpace: 'nowrap' }}
         >
           글쓰기
         </Button>

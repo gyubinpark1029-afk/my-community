@@ -47,7 +47,7 @@ function HeroSection({ onBrowse }) {
           </Typography>
           <Typography
             variant="h6"
-            sx={{ fontWeight: 400, lineHeight: 1.8, maxWidth: 480 }}
+            sx={{ fontWeight: 400, lineHeight: 1.8, maxWidth: 480, wordBreak: 'keep-all' }}
           >
             마음에 담아 둔 책 이야기를
             <br />

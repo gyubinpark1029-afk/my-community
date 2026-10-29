@@ -10,7 +10,7 @@ function Footer() {
       <Container maxWidth="md">
         <Stack spacing={1} sx={{ alignItems: 'center', textAlign: 'center' }}>
           <Typography variant="subtitle1">📖 서랍장</Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" color="text.secondary" sx={{ wordBreak: 'keep-all', textWrap: 'balance' }}>
             마음에 담아 둔 책 이야기를 서랍처럼 하나씩 꺼내 나누는 곳
           </Typography>
           <Link
