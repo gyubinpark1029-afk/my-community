@@ -9,6 +9,7 @@ import SignupPage from './pages/SignupPage.jsx';
 import FindIdPage from './pages/FindIdPage.jsx';
 import FindPasswordPage from './pages/FindPasswordPage.jsx';
 import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
+import MyPage from './pages/MyPage.jsx';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/posts/new" element={<PostWritePage />} />
           <Route path="/posts/:id" element={<PostDetailPage />} />
           <Route path="/posts/:id/edit" element={<PostWritePage />} />
+          <Route path="/my" element={<MyPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/find-id" element={<FindIdPage />} />

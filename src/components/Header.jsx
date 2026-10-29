@@ -29,6 +29,9 @@ function Header() {
         {session ? (
           <>
             <Typography sx={{ mr: 2 }}>{profile?.name}님</Typography>
+            <Button color="inherit" component={RouterLink} to="/my">
+              내 활동
+            </Button>
             <Button color="inherit" onClick={handleLogout}>
               로그아웃
             </Button>
