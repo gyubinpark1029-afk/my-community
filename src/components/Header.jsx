@@ -1,10 +1,10 @@
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { AppBar, Box, Button, IconButton, Toolbar, Typography, useColorScheme } from '@mui/material';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import supabase from '../supabaseClient.js';
 import { useAuth } from '../contexts/AuthContext.jsx';
+import DrawerLogo from './DrawerLogo.jsx';
 
 function Header() {
   const { session, profile } = useAuth();
@@ -28,7 +28,7 @@ function Header() {
           to="/"
           sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'inherit', textDecoration: 'none', flexGrow: 1 }}
         >
-          <MenuBookIcon />
+          <DrawerLogo size={36} isAnimated={false} />
           <Typography variant="h6" component="span">
             서랍장
           </Typography>

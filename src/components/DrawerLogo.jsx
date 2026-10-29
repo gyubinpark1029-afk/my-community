@@ -14,7 +14,7 @@ const BLUSH = 'var(--mui-palette-primary-main)';
 const KNOB = 'var(--mui-palette-secondary-main)';
 
 // 웃는 얼굴의 서랍장 캐릭터. 맨 위 서랍에서 책이 살짝 삐져나와 있다.
-function DrawerLogo({ size = 64 }) {
+function DrawerLogo({ size = 64, isAnimated = true }) {
   return (
     <Box
       component="svg"
@@ -23,7 +23,7 @@ function DrawerLogo({ size = 64 }) {
       height={size}
       aria-hidden="true"
       sx={{
-        animation: `${float} 2.4s ease-in-out infinite alternate`,
+        animation: isAnimated ? `${float} 2.4s ease-in-out infinite alternate` : 'none',
         // 움직임이 불편한 사람을 위해 모션 줄이기 설정을 따른다
         '@media (prefers-reduced-motion: reduce)': { animation: 'none' },
       }}
